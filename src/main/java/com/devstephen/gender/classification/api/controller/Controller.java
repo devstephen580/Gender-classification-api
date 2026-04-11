@@ -22,20 +22,21 @@ public class Controller {
   @GetMapping(classifyEndpoint)
   public ResponseEntity<?> fetchGenderizer (@RequestParam (required = false) String name){
 
-    if (!name.matches("[a-zA-Z]+")) {
-      return ResponseEntity.status(422).body(
-          GenderizeResponse.builder()
-              .status("error")
-              .message("Name must contain only alphabetic characters")
-              .build()
-      );
-    }
 
     if (name == null || name.trim().isEmpty()) {
       return ResponseEntity.status(400).body(
           GenderizeResponse.builder()
               .status("error")
               .message("Missing or empty name parameter")
+              .build()
+      );
+    }
+    
+    if (!name.matches("[a-zA-Z]+")) {
+      return ResponseEntity.status(422).body(
+          GenderizeResponse.builder()
+              .status("error")
+              .message("Name must contain only alphabetic characters")
               .build()
       );
     }
