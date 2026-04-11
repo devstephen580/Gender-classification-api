@@ -21,6 +21,8 @@ public class GenderizeService {
       String url = GENDERIZE_URL + name;
       Map response = restTemplate.getForObject(url, Map.class);
 
+
+
       // Edge case: null gender or 0 count
       if (response.get("gender") == null ||
           response.get("count") == null ||
