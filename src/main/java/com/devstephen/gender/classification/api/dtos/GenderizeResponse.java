@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenderizeResponse {
-
+  private String status;
+  private Object data;
+  private String message;
 }
