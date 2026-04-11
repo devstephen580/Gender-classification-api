@@ -31,7 +31,7 @@ public class Controller {
               .build()
       );
     }
-    
+
     if (!name.matches("[a-zA-Z]+")) {
       return ResponseEntity.status(422).body(
           GenderizeResponse.builder()
