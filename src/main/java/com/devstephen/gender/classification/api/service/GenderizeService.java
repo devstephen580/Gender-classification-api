@@ -4,49 +4,53 @@ import com.devstephen.gender.classification.api.dtos.CustomResponse;
 import com.devstephen.gender.classification.api.dtos.GenderizeResponse;
 import java.time.Instant;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
+@RequiredArgsConstructor
 public class GenderizeService {
 
 
-  private final RestTemplate restTemplate = new RestTemplate();
   private static final String GENDERIZE_URL = "https://api.genderize.io/?name=";
+  private final WebClient webClient;
 
+  public GenderizeService(WebClient.Builder webClientBuilder) {
+    this.webClient = webClientBuilder.baseUrl(GENDERIZE_URL).build();
+  }
+  
   public ResponseEntity<?> classifyName(String name) {
     try {
-      // Call Genderize API
-      String url = GENDERIZE_URL + name;
-      Map response = restTemplate.getForObject(url, Map.class);
 
-
+      Map response = webClient.get()
+          .uri("/?name=" + name)
+          .retrieve()
+          .bodyToMono(Map.class)
+          .block(); // block() makes it synchronous like RestTemplate
 
       // Edge case: null gender or 0 count
       if (response.get("gender") == null ||
           response.get("count") == null ||
           (Integer) response.get("count") == 0) {
         return ResponseEntity.status(422).body(
-            CustomResponse.builder()
+            GenderizeResponse.builder()
                 .status("error")
                 .message("No prediction available for the provided name")
                 .build()
         );
       }
 
-      // Extract fields
       String gender = (String) response.get("gender");
       Double probability = ((Double) response.get("probability"));
       Integer sampleSize = ((Integer) response.get("count"));
 
-      // Compute is_confident
       boolean isConfident = probability >= 0.7 && sampleSize >= 100;
 
-      // Generate processed_at
       String processedAt = Instant.now().toString();
 
-      GenderizeResponse data = GenderizeResponse.builder()
+      CustomResponse data = CustomResponse.builder()
           .name(name)
           .gender(gender)
           .probability(probability)
@@ -56,7 +60,7 @@ public class GenderizeService {
           .build();
 
       return ResponseEntity.ok(
-          CustomResponse.builder()
+          GenderizeResponse.builder()
               .status("success")
               .data(data)
               .build()
@@ -64,7 +68,7 @@ public class GenderizeService {
 
     } catch (Exception e) {
       return ResponseEntity.status(502).body(
-          CustomResponse.builder()
+          GenderizeResponse.builder()
               .status("error")
               .message("Upstream or server failure")
               .build()

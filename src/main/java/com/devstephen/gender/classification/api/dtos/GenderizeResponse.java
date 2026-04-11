@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenderizeResponse {
-  private String name;
-  private String gender;
-  private Double probability;
-  private Integer sample_size;
-  private Boolean is_confident;
-  private String processed_at;
-
+  private String status;
+  private Object data;
+  private String message;
 }

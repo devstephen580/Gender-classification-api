@@ -3,7 +3,7 @@ package com.devstephen.gender.classification.api.controller;
 import static com.devstephen.gender.classification.api.util.AppConstant.classifyEndpoint;
 import static com.devstephen.gender.classification.api.util.AppConstant.controllerMapping;
 
-import com.devstephen.gender.classification.api.dtos.CustomResponse;
+import com.devstephen.gender.classification.api.dtos.GenderizeResponse;
 import com.devstephen.gender.classification.api.service.GenderizeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class Controller {
 
     if (!name.matches("[a-zA-Z]+")) {
       return ResponseEntity.status(422).body(
-          CustomResponse.builder()
+          GenderizeResponse.builder()
               .status("error")
               .message("Name must contain only alphabetic characters")
               .build()
@@ -33,7 +33,7 @@ public class Controller {
 
     if (name == null || name.trim().isEmpty()) {
       return ResponseEntity.status(400).body(
-          CustomResponse.builder()
+          GenderizeResponse.builder()
               .status("error")
               .message("Missing or empty name parameter")
               .build()
