@@ -10,17 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-@RequiredArgsConstructor
 public class GenderizeService {
 
-
-  private static final String GENDERIZE_URL = "https://api.genderize.io/?name=";
   private final WebClient webClient;
 
-  public GenderizeService(WebClient.Builder webClientBuilder) {
-    this.webClient = webClientBuilder.baseUrl(GENDERIZE_URL).build();
+  public GenderizeService(WebClient webClient) {
+    this.webClient = webClient;
   }
-  
+
+
   public ResponseEntity<?> classifyName(String name) {
     try {
 

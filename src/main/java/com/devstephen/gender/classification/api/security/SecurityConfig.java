@@ -8,12 +8,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @EnableMethodSecurity
@@ -47,8 +45,10 @@ public class SecurityConfig {
   }
 
   @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
+  public WebClient webClient() {
+    return WebClient.builder()
+        .baseUrl("https://api.genderize.io")
+        .build();
   }
 
 }
