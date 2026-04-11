@@ -4,7 +4,6 @@ import com.devstephen.gender.classification.api.dtos.CustomResponse;
 import com.devstephen.gender.classification.api.dtos.GenderizeResponse;
 import java.time.Instant;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,12 +25,11 @@ public class GenderizeService {
           .uri("/?name=" + name)
           .retrieve()
           .bodyToMono(Map.class)
-          .block(); // block() makes it synchronous like RestTemplate
+          .block();
 
-      // Edge case: null gender or 0 count
       if (response.get("gender") == null ||
           response.get("count") == null ||
-          (Integer) response.get("count") == 0) {
+          ((Number) response.get("count")).intValue() == 0) {
         return ResponseEntity.status(422).body(
             GenderizeResponse.builder()
                 .status("error")
@@ -41,8 +39,8 @@ public class GenderizeService {
       }
 
       String gender = (String) response.get("gender");
-      Double probability = ((Double) response.get("probability"));
-      Integer sampleSize = ((Integer) response.get("count"));
+      Double probability = ((Number) response.get("probability")).doubleValue();
+      Integer sampleSize = ((Number) response.get("count")).intValue();
 
       boolean isConfident = probability >= 0.7 && sampleSize >= 100;
 
@@ -52,9 +50,9 @@ public class GenderizeService {
           .name(name)
           .gender(gender)
           .probability(probability)
-          .sample_size(sampleSize)
-          .is_confident(isConfident)
-          .processed_at(processedAt)
+          .sampleSize(sampleSize)
+          .isConfident(isConfident)
+          .processedAt(processedAt)
           .build();
 
       return ResponseEntity.ok(

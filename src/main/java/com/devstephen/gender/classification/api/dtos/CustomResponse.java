@@ -13,8 +13,8 @@ public class CustomResponse {
   private String name;
   private String gender;
   private Double probability;
-  private Integer sample_size;
-  private Boolean is_confident;
-  private String processed_at;
+  private Integer sampleSize;
+  private Boolean isConfident;
+  private String processedAt;
 
 }

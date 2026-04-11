@@ -20,8 +20,7 @@ public class Controller {
   private final GenderizeService service;
 
   @GetMapping(classifyEndpoint)
-  public ResponseEntity<?> fetchGenderizer (@RequestParam (required = false) String name){
-
+  public ResponseEntity<?> fetchGenderizer(@RequestParam(required = false) String name) {
 
     if (name == null || name.trim().isEmpty()) {
       return ResponseEntity.status(400).body(
@@ -30,13 +29,11 @@ public class Controller {
               .message("Missing or empty name parameter")
               .build()
       );
-    }
-
-    if (!name.matches("[a-zA-Z]+")) {
+    } else if (!name.matches("[a-zA-Z]+")) {
       return ResponseEntity.status(422).body(
           GenderizeResponse.builder()
               .status("error")
-              .message("Name must contain only alphabetic characters")
+              .message("Name must be a string")
               .build()
       );
     }
