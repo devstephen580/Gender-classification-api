@@ -3,6 +3,7 @@ package com.devstephen.gender.classification.api.service;
 import com.devstephen.gender.classification.api.dtos.CustomResponse;
 import com.devstephen.gender.classification.api.dtos.GenderizeResponse;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,14 @@ public class GenderizeService {
       }
 
       String gender = (String) response.get("gender");
-      Double probability = ((Number) response.get("probability")).doubleValue();
       Integer sampleSize = ((Number) response.get("count")).intValue();
+      Double probability = ((Number) response.get("probability")).doubleValue();
 
       boolean isConfident = probability >= 0.7 && sampleSize >= 100;
 
-      String processedAt = Instant.now().toString();
+      String processedAt = Instant.now()
+          .truncatedTo(ChronoUnit.SECONDS)
+          .toString();
 
       CustomResponse data = CustomResponse.builder()
           .name(name)
