@@ -38,6 +38,7 @@ public class SecurityConfig {
     config.setAllowedOrigins(List.of("*"));
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
+    config.addExposedHeader("Access-Control-Allow-Origin");
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
